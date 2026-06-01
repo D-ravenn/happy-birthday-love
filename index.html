@@ -320,7 +320,7 @@ p {
     to { transform: translateY(-20vh) rotate(360deg); }
 }
 
-/* --- Music Button (Spotify) --- */
+/* --- Music Button (Local) --- */
 .music-btn {
     position: fixed;
     top: 20px; 
@@ -337,7 +337,7 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
-    text-decoration: none;
+    cursor: pointer;
 }
 
 /* --- Final Screen --- */
@@ -367,6 +367,10 @@ p {
 </head>
 <body>
 
+<audio id="bgMusic" loop>
+    <source src="nothing.mp3" type="audio/mpeg">
+</audio>
+
 <div id="loading-screen">
     <div class="loading-text">
         <div style="font-size: 40px; margin-bottom: 15px;">🌸</div>
@@ -374,7 +378,7 @@ p {
     </div>
 </div>
 
-<a href="https://open.spotify.com/track/1lORkxEMmsCZqhoxcmk3A3?si=29eb0dd2cba84ba5" target="_blank" class="music-btn">🎵</a>
+<button class="music-btn" id="musicToggle" onclick="toggleMusic(event)">🎵</button>
 
 <div id="bg-decorations"></div>
 
@@ -522,6 +526,67 @@ p {
 </section>
 
 <script>
+// Web Audio API for Cute Click Sounds (No file download needed)
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+let audioCtx;
+
+function playCuteClick() {
+    if (!audioCtx) {
+        audioCtx = new AudioContext();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    oscillator.type = 'sine';
+    // Creates a cute upward pitch sweep
+    oscillator.frequency.setValueAtTime(400, audioCtx.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+
+    gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    oscillator.start();
+    oscillator.stop(audioCtx.currentTime + 0.1);
+}
+
+// Local Background Music Logic
+let bgMusic = document.getElementById("bgMusic");
+let musicBtn = document.getElementById("musicToggle");
+let isMusicPlaying = false;
+let musicStarted = false;
+
+function toggleMusic(e) {
+    e.stopPropagation(); // Prevents the global click from firing immediately
+    if (isMusicPlaying) {
+        bgMusic.pause();
+        musicBtn.innerHTML = "🎵";
+    } else {
+        bgMusic.play();
+        musicBtn.innerHTML = "⏸️";
+    }
+    isMusicPlaying = !isMusicPlaying;
+}
+
+// Play sound on EVERY tap, and auto-start music on the FIRST tap
+document.body.addEventListener('click', function(e) {
+    playCuteClick();
+    
+    if (!musicStarted) {
+        bgMusic.play().then(() => {
+            isMusicPlaying = true;
+            musicBtn.innerHTML = "⏸️";
+        }).catch(err => console.log("Autoplay blocked until user taps"));
+        musicStarted = true;
+    }
+});
+
 // Remove Loading Screen
 window.addEventListener('load', () => {
     setTimeout(() => {
@@ -610,8 +675,8 @@ function triggerExplosion() {
         document.body.appendChild(particle);
         
         // Scatter distances
-        const tx = (Math.random() - 0.5) * 200; // Left/Right spread
-        const ty = (Math.random() - 0.5) * 200; // Up/Down spread
+        const tx = (Math.random() - 0.5) * 200; 
+        const ty = (Math.random() - 0.5) * 200; 
         const rot = Math.random() * 360;
 
         // Apply the transformation instantly so the transition kicks in
