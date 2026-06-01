@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Happy Birthday Love ❤️</title>
+
+<link rel="apple-touch-icon" href="IMG_3872.jpg">
+<link rel="icon" type="image/jpeg" href="IMG_3872.jpg">
+
+<style>
+/* --- Color Palette & Variables --- */
+:root {
+    --baby-pink: #F8D7E3;
+    --soft-pink: #FDEEF4;
+    --olive-green: #708238;
+    --sage-green: #A8B58A;
+    --cream-white: #FFFDF8;
+    --text-dark: #3a4220;
+}
+
+/* --- Base Styles --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--cream-white);
+    color: var(--text-dark);
+    text-align: center;
+    overflow: hidden; 
+    position: relative;
+}
+
+/* --- Screen Transitions --- */
+.screen {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100vw;
+    padding: 40px 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: var(--cream-white);
+    z-index: 2;
+    overflow-y: auto;
+    padding-bottom: 100px; 
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.screen.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+h1, h2, h3 {
+    color: var(--olive-green);
+    margin-bottom: 20px;
+}
+
+p {
+    line-height: 1.6;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    color: var(--text-dark);
+}
+
+/* --- Buttons --- */
+.nav-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.btn {
+    background: var(--olive-green);
+    color: var(--cream-white);
+    padding: 12px 30px;
+    border: none;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(112, 130, 56, 0.2);
+    transition: transform 0.2s;
+}
+
+.btn:active {
+    transform: scale(0.95);
+}
+
+.next-btn {
+    background: var(--sage-green);
+}
+
+.prev-btn {
+    background: var(--soft-pink);
+    color: var(--olive-green);
+    border: 2px solid var(--sage-green);
+    box-shadow: none;
+}
+
+/* --- 1. Loading Screen --- */
+#loading-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: var(--baby-pink);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 1s ease-out;
+}
+
+.loading-text {
+    font-size: 1.5rem;
+    color: var(--olive-green);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* --- 3. Interactive Envelope --- */
+.envelope-container {
+    background: var(--baby-pink);
+    padding: 40px 20px;
+    border-radius: 15px;
+    border: 2px dashed var(--olive-green);
+    cursor: pointer;
+    width: 100%;
+    max-width: 400px;
+    transition: 0.5s;
+}
+
+#letter-content {
+    display: none;
+    background: var(--cream-white);
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    animation: slideDown 0.8s forwards;
+    text-align: left;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- 4. Memory Gallery --- */
+.carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 20px;
+    padding: 20px 0;
+    width: 100vw;
+    -webkit-overflow-scrolling: touch;
+}
+
+.carousel::-webkit-scrollbar { display: none; }
+
+.carousel-item {
+    scroll-snap-align: center;
+    flex: 0 0 85%;
+    background: var(--soft-pink);
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 400px;
+    object-fit: contain;
+    border-radius: 15px;
+}
+
+/* --- 6. Reasons I Love You --- */
+.cards-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    max-width: 500px;
+}
+
+.flip-card {
+    background-color: transparent;
+    width: 150px;
+    height: 150px;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.flip-card.flipped .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.flip-card-front {
+    background-color: var(--baby-pink);
+    color: var(--olive-green);
+    font-weight: bold;
+}
+
+.flip-card-back {
+    background-color: var(--sage-green);
+    color: var(--cream-white);
+    transform: rotateY(180deg);
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+/* --- 7. Quiz --- */
+.quiz-container {
+    background: var(--soft-pink);
+    padding: 20px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.quiz-btn {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 15px;
+    background: var(--cream-white);
+    border: 1px solid var(--olive-green);
+    border-radius: 10px;
+    color: var(--text-dark);
+    font-size: 1rem;
+}
+
+#quiz-result {
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+/* --- 8. Cake --- */
+.cake {
+    font-size: 120px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    animation: gentleBounce 2s infinite;
+}
+
+.cake:active {
+    transform: scale(0.9);
+}
+
+@keyframes gentleBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.wish-message {
+    display: none;
+    font-size: 1.5rem;
+    color: var(--olive-green);
+    font-weight: bold;
+    margin-top: 20px;
+    animation: slideDown 1s;
+}
+
+/* --- Floating Elements --- */
+.bg-element {
+    position: fixed;
+    z-index: 1;
+    opacity: 0.4;
+    pointer-events: none;
+    animation: floatUp 15s linear infinite;
+}
+
+@keyframes floatUp {
+    from { transform: translateY(100vh) rotate(0deg); }
+    to { transform: translateY(-20vh) rotate(360deg); }
+}
+
+/* --- Music Button (Spotify) --- */
+.music-btn {
+    position: fixed;
+    top: 20px; 
+    right: 20px;
+    background: var(--olive-green);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+}
+
+/* --- Final Screen --- */
+#final-message {
+    display: none;
+    background: var(--baby-pink);
+    padding: 30px;
+    border-radius: 15px;
+    margin-top: 20px;
+    color: var(--olive-green);
+}
+
+.ios-instructions {
+    background: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    text-align: left;
+    margin-top: 40px;
+    width: 100%;
+    max-width: 400px;
+}
+.ios-instructions b { color: #007aff; }
+
+</style>
+</head>
+<body>
+
+<div id="loading-screen">
+    <div class="loading-text">
+        <div style="font-size: 40px; margin-bottom: 15px;">🌸</div>
+        A special gift is waiting for you...
+    </div>
+</div>
+
+<a href="https://open.spotify.com/track/1lORkxEMmsCZqhoxcmk3A3?si=29eb0dd2cba84ba5" target="_blank" class="music-btn">🎵</a>
+
+<div id="bg-decorations"></div>
+
+<section id="screen-welcome" class="screen active">
+    <h1>Happy 21st Birthday, Love ❤️</h1>
+    <p>A little surprise made just for you...</p>
+    <button class="btn" style="margin-top: 30px;" onclick="goToScreen('screen-letter')">Open My Gift 🎁</button>
+</section>
+
+<section id="screen-letter" class="screen">
+    <h2>A Letter For You 💌</h2>
+    <div class="envelope-container" id="envelope" onclick="openEnvelope()">
+        <h3 id="env-text" style="color: var(--olive-green);">Tap to Open Envelope</h3>
+        <div id="letter-content">
+            <p><strong>Happy Birthday, my love.</strong></p>
+            <p>I just want you to know how grateful I am to have you in my life. Every moment with you becomes a memory worth keeping.</p>
+            <p>I hope this year brings you everything you are working so hard for.</p>
+            <p><strong>I will love you forever and ever. Happy 21st birthday, Love! ❤️</strong></p>
+        </div>
+    </div>
+    
+    <div class="nav-buttons">
+        <button class="btn next-btn" id="next-to-gallery" style="display: none;" onclick="goToScreen('screen-gallery')">Next ➡️</button>
+    </div>
+</section>
+
+<section id="screen-gallery" class="screen">
+    <h2>Our Memories 📸</h2>
+    <p style="font-size: 0.9rem;">(Swipe to see more)</p>
+    <div class="carousel">
+        <div class="carousel-item">
+            <img src="IMG_3872.jpg" alt="Memory">
+        </div>
+        <div class="carousel-item">
+            <img src="IMG_7858.JPG" alt="Memory">
+        </div>
+        <div class="carousel-item">
+            <img src="IMG_8171(1).JPG" alt="Memory">
+        </div>
+        <div class="carousel-item">
+            <img src="IMG_8769.JPG" alt="Memory">
+        </div>
+        <div class="carousel-item">
+            <img src="IMG_8949.JPG" alt="Memory">
+        </div>
+        <div class="carousel-item">
+            <img src="IMG_8983.JPG" alt="Memory">
+        </div>
+    </div>
+    
+    <div class="nav-buttons">
+        <button class="btn prev-btn" onclick="goToScreen('screen-letter')">⬅️ Back</button>
+        <button class="btn next-btn" onclick="goToScreen('screen-reasons')">Next ➡️</button>
+    </div>
+</section>
+
+<section id="screen-reasons" class="screen">
+    <h2>Reasons I Love You 💖</h2>
+    <p style="font-size: 0.9rem;">(Tap to flip the cards)</p>
+    <div class="cards-grid">
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">Tap Me ❤️</div>
+                <div class="flip-card-back">Your beautiful smile<br>Makes everything worthwhile.</div>
+            </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">Tap Me 🌷</div>
+                <div class="flip-card-back">The way that you care<br>Is beautiful and rare.</div>
+            </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">Tap Me ✨</div>
+                <div class="flip-card-back">Your sparkling eyes<br>Are my favorite prize.</div>
+            </div>
+        </div>
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">Tap Me 🥰</div>
+                <div class="flip-card-back">You are sweet and you are fun<br>My forever number one.</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="nav-buttons">
+        <button class="btn prev-btn" onclick="goToScreen('screen-gallery')">⬅️ Back</button>
+        <button class="btn next-btn" onclick="goToScreen('screen-quiz')">Next ➡️</button>
+    </div>
+</section>
+
+<section id="screen-quiz" class="screen">
+    <h2>Mini Quiz 🧩</h2>
+    <div class="quiz-container">
+        <p>Where did we go on our first date?</p>
+        <button class="quiz-btn" onclick="checkQuiz(false)">McDonald's</button>
+        <button class="quiz-btn" onclick="checkQuiz(true)">Jollibee</button>
+        <button class="quiz-btn" onclick="checkQuiz(false)">A Coffee Shop</button>
+        <div id="quiz-result"></div>
+    </div>
+    
+    <div class="nav-buttons">
+        <button class="btn prev-btn" onclick="goToScreen('screen-reasons')">⬅️ Back</button>
+        <button class="btn next-btn" id="next-to-cake" style="display: none;" onclick="goToScreen('screen-cake')">Next ➡️</button>
+    </div>
+</section>
+
+<section id="screen-cake" class="screen">
+    <h2>Make A 21st Birthday Wish 🎂</h2>
+    <p>Tap the cake to blow out the candles!</p>
+    <div class="cake" id="bday-cake" onclick="blowCandles()">🎂</div>
+    <div class="wish-message" id="wishMessage">
+        Yay! 🎉<br>May every wish come true.
+    </div>
+    
+    <div class="nav-buttons">
+        <button class="btn prev-btn" onclick="goToScreen('screen-quiz')">⬅️ Back</button>
+        <button class="btn next-btn" id="next-to-final" style="display: none;" onclick="goToScreen('screen-final')">One Last Thing ➡️</button>
+    </div>
+</section>
+
+<section id="screen-final" class="screen">
+    <h2>Happy 21st Birthday! <br>iloveyousomuch</h2>
+    <button class="btn" style="margin-bottom: 20px;" id="final-btn" onclick="showFinalMessage()">Tap Here ❤️</button>
+    
+    <div id="final-message">
+        <h3>Kung sa langit may sky, 
+            <br> kung sa hardin ay butterfly, 
+            <br> kung sa sementeryo may bangkay, 
+            <br> sana sa puso mo, ako parin ang nakalagay baby</h3>
+        <p style="margin-top: 15px;"><strong>aroy aroy agoy agoy ❤️</strong></p>
+    </div>
+
+    <div class="ios-instructions">
+        <strong>📱 Keep this app forever:</strong><br><br>
+        1. Open this link in <b>Safari</b><br>
+        2. Tap the <b>Share</b> icon at the bottom of the screen.<br>
+        3. Scroll down and tap <b>Add to Home Screen</b>.<br>
+    </div>
+    
+    <div class="nav-buttons">
+        <button class="btn prev-btn" onclick="goToScreen('screen-cake')">⬅️ Back</button>
+    </div>
+</section>
+
+<script>
+// Remove Loading Screen
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        const loader = document.getElementById('loading-screen');
+        loader.style.opacity = '0';
+        setTimeout(() => loader.style.display = 'none', 1000);
+    }, 2000);
+});
+
+// Floating Decorations
+const bgDecor = document.getElementById('bg-decorations');
+const decorItems = ['🌸', '✨', '🤍', '🌿'];
+for(let i = 0; i < 15; i++) {
+    let el = document.createElement('div');
+    el.className = 'bg-element';
+    el.innerHTML = decorItems[Math.floor(Math.random() * decorItems.length)];
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.fontSize = (Math.random() * 20 + 10) + 'px';
+    el.style.animationDuration = (Math.random() * 10 + 10) + 's';
+    el.style.animationDelay = Math.random() * 5 + 's';
+    bgDecor.appendChild(el);
+}
+
+// Navigation Logic
+function goToScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+    window.scrollTo(0, 0);
+}
+
+// Letter Logic
+function openEnvelope() {
+    document.getElementById("env-text").style.display = "none";
+    document.getElementById("envelope").style.background = "transparent";
+    document.getElementById("envelope").style.border = "none";
+    document.getElementById("letter-content").style.display = "block";
+    document.getElementById("next-to-gallery").style.display = "inline-block";
+}
+
+// Quiz Logic
+function checkQuiz(isCorrect) {
+    const res = document.getElementById("quiz-result");
+    if(isCorrect) {
+        res.innerHTML = "🎉 Exactly! I love you so much!";
+        res.style.color = "var(--olive-green)";
+        document.getElementById("next-to-cake").style.display = "inline-block";
+    } else {
+        res.innerHTML = "😂 Not quite cutie! Try again.";
+        res.style.color = "#ff4f81";
+    }
+}
+
+// Cake Logic
+function blowCandles() {
+    const cake = document.getElementById("bday-cake");
+    cake.style.animation = "none";
+    cake.innerHTML = "🍰"; 
+    
+    document.getElementById("wishMessage").style.display = "block";
+    document.getElementById("next-to-final").style.display = "inline-block";
+    
+    triggerExplosion();
+}
+
+// Reliable iOS CSS-based Explosion
+function triggerExplosion() {
+    const items = ["❤️", "💖", "💕", "😍", "🥰", "🎉", "🎊", "🎈", "✨", "🌸", "🎂"];
+    
+    for(let i = 0; i < 80; i++) {
+        let particle = document.createElement("div");
+        
+        particle.innerHTML = items[Math.floor(Math.random() * items.length)];
+        particle.style.fontSize = (Math.random() * 20 + 15) + "px";
+        
+        particle.style.position = "fixed";
+        particle.style.zIndex = "9999";
+        particle.style.pointerEvents = "none";
+        
+        // Start exactly in the center of the screen
+        particle.style.left = "50vw";
+        particle.style.top = "50vh";
+        
+        // Use a smooth CSS transition that iOS Safari handles perfectly
+        particle.style.transition = "transform 2s cubic-bezier(0.1, 0.8, 0.3, 1), opacity 2s ease-in";
+        
+        document.body.appendChild(particle);
+        
+        // Scatter distances
+        const tx = (Math.random() - 0.5) * 200; // Left/Right spread
+        const ty = (Math.random() - 0.5) * 200; // Up/Down spread
+        const rot = Math.random() * 360;
+
+        // Apply the transformation instantly so the transition kicks in
+        setTimeout(() => {
+            particle.style.transform = `translate(${tx}vw, ${ty}vh) rotate(${rot}deg) scale(0.5)`;
+            particle.style.opacity = "0";
+        }, 10);
+        
+        // Clean up DOM after animation finishes
+        setTimeout(() => particle.remove(), 2000);
+    }
+}
+
+// Final Screen Logic
+function showFinalMessage() {
+    document.getElementById("final-btn").style.display = "none";
+    document.getElementById("final-message").style.display = "block";
+}
+</script>
+
+</body>
+</html>
